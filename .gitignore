@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+/vendor/
+/log/
+/cache/
+.env
+/config/*.php
+/sessions/
+*.bak
