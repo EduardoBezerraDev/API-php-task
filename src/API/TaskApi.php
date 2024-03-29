@@ -5,8 +5,6 @@ namespace API;
 use PDO;
 use Model\Task;
 
-header("Access-Control-Allow-Origin: *");
-
 class TaskAPI
 {
     private PDO $db;
@@ -18,8 +16,18 @@ class TaskAPI
 
     public function getAllTasks(): array
     {
-        $statement = $this->db->query("SELECT * FROM tasks");
+        $query = "SELECT * FROM tasks";
+        $statement = $this->db->query($query);
         return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTaskById(int $taskId): ?array
+    {
+        $query = "SELECT * FROM tasks WHERE id=?";
+        $statement = $this->db->prepare($query);
+        $statement->execute([$taskId]);
+        $task = $statement->fetch(PDO::FETCH_ASSOC);
+        return $task ?: null;
     }
 
     public function createTask(Task $task): bool
@@ -36,11 +44,10 @@ class TaskAPI
         return $statement->execute([$task->getName(), $task->getStartDate(), $task->getEndDate(), $task->getStatus(), $task->getId()]);
     }
 
-    public function deleteTask(int $id): bool
+    public function deleteTask(int $taskId): bool
     {
         $query = "DELETE FROM tasks WHERE id=?";
         $statement = $this->db->prepare($query);
-        return $statement->execute([$id]);
+        return $statement->execute([$taskId]);
     }
-
 }

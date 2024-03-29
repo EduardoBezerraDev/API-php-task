@@ -4,25 +4,27 @@ use API\TaskAPI;
 use App\Router;
 use Model\Task;
 
-spl_autoload_register(function ($class) {
-    $classPath = str_replace('\\', '/', $class) . '.php';
-    require_once 'src/' . $classPath;
-});
+require_once ('autoload.php');
 
 $db = new PDO("mysql:host=localhost;dbname=myTasks", "root", "");
 
-$taskAPI = new TaskAPI($db);
+$taskAPI = new TaskApi($db);
 
 $router = new Router();
 $router->get('/api/tasks', function () use ($taskAPI) {
+    if(isset($_GET['id'])){
+        return handleGetTaskById($taskAPI, $_GET['id']);
+    }
     handleGetAllTasks($taskAPI);
 });
+
 $router->post('/api/tasks/create', function () use ($taskAPI) {
     $requestData = json_decode(file_get_contents('php://input'), true);
     handleCreateTask($taskAPI, $requestData);
 });
 $router->put('/api/tasks/update', function () use ($taskAPI) {
-    handleUpdateTask($taskAPI);
+    $requestData = json_decode(file_get_contents('php://input'), true);
+    handleUpdateTask($taskAPI, $requestData);
 });
 $router->delete('/api/tasks/delete', function () use ($taskAPI) {
     $requestData = json_decode(file_get_contents('php://input'), true);
@@ -36,6 +38,18 @@ function handleGetAllTasks(TaskAPI $taskAPI)
     $tasks = $taskAPI->getAllTasks();
     header('Content-Type: application/json');
     echo json_encode($tasks);
+}
+
+function handleGetTaskById(TaskAPI $taskAPI, $taskId)
+{
+    $task = $taskAPI->getTaskById($taskId);
+    if ($task) {
+        header('Content-Type: application/json');
+        echo json_encode($task);
+    } else {
+        http_response_code(404);
+        echo json_encode(["error" => "Tarefa não encontrada"]);
+    }
 }
 
 function handleCreateTask(TaskAPI $taskAPI, array $requestData)
@@ -64,10 +78,22 @@ function handleCreateTask(TaskAPI $taskAPI, array $requestData)
     }
 }
 
-function handleUpdateTask(TaskAPI $taskAPI)
+function handleUpdateTask(TaskAPI $taskAPI, $requestData)
 {
-    $task = new Task('Tarefa Atualizada', '28/01/2024', '28/01/2024', 'Concluída', 1);
+    $id = (int) filter_var($requestData['id'], FILTER_SANITIZE_STRING);
+    $name = filter_var($requestData['name'], FILTER_SANITIZE_STRING);
+    $startDate = filter_var($requestData['startDate'], FILTER_SANITIZE_STRING);
+    $endDate = filter_var($requestData['endDate'], FILTER_SANITIZE_STRING);
+    $status = filter_var($requestData['status'], FILTER_SANITIZE_STRING);
+
+    if (empty($name) || empty($startDate) || empty($endDate) || empty($status) || empty($id)) {
+        http_response_code(400);
+        echo json_encode(["error" => "Todos os campos são obrigatórios"]);
+        return;
+    }
+    $task = new Task($name, $startDate, $endDate, $status, $id);
     $success = $taskAPI->updateTask($task);
+
     if ($success) {
         echo "Tarefa atualizada com sucesso";
     } else {
@@ -75,7 +101,7 @@ function handleUpdateTask(TaskAPI $taskAPI)
     }
 }
 
-function handleDeleteTask(TaskAPI $taskAPI,  array $requestData)
+function handleDeleteTask(TaskAPI $taskAPI, array $requestData)
 {
     $id = filter_var($requestData['id'], FILTER_SANITIZE_STRING);
     $success = $taskAPI->deleteTask($id);
