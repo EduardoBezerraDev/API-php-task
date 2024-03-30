@@ -1,29 +1,60 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use API\TaskApi;
+use Model\Task;
 
-require 'TaskAPI.php';
+require_once 'src/API/TaskApi.php';
+require_once 'src/MODEL/Task.php';
 
-class TaskAPITest extends TestCase {
-    private PDO $pdo;
-    private TaskAPI $api;
+class TaskAPITest extends TestCase
+{
+    private static $pdo;
+    private static $dbName = 'myTasks_test';
+    private $taskAPI;
 
-    protected function setUp(): void {
-        $this->pdo = new PDO('mysql:host=localhost;dbname=nome_do_banco', 'usuario', 'senha');
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->api = new TaskAPI($this->pdo);
+    public static function setUpBeforeClass(): void
+    {
+        self::$pdo = new PDO("mysql:host=localhost", "root", "");
+        self::$pdo->exec("CREATE DATABASE IF NOT EXISTS " . self::$dbName);
     }
 
-    public function testGetAllTasks(): void {
-        $tasks = $this->api->getAllTasks();
-        $this->assertIsArray($tasks);
+    protected function setUp(): void
+    {
+        $this->pdo = new PDO("mysql:host=localhost;dbname=" . self::$dbName, "root", "");
+        $this->pdo->exec("CREATE TABLE IF NOT EXISTS tasks (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255),
+            startDate DATE,
+            endDate DATE,
+            status VARCHAR(50)
+        )");
+        $this->taskAPI = new TaskApi($this->pdo);
     }
 
-    public function testCreateTask(): void {
-        $this->assertTrue($this->api->createTask('Nova Tarefa', '2024-03-28', '2024-03-28', 'Em andamento'));
+    public function testCreateTask()
+    {
+        $task = new Task("Test Task", "2024-03-30", "2024-03-31", "Pronto");
+        $result = $this->taskAPI->createTask($task);
+        $this->assertTrue($result);
     }
 
-    public function testUpdateTask(): void {
-        $this->assertTrue($this->api->updateTask(1, 'Tarefa Atualizada', '2024-03-28', '2024-03-28', 'Concluída'));
+    public function testGetTaskById()
+    {
+        $task = new Task("Test Task", "2024-03-30", "2024-03-31", "Pronto");
+        $this->taskAPI->createTask($task);
+        $taskId = $this->pdo->lastInsertId();
+        $result = $this->taskAPI->getTaskById($taskId);
+        $this->assertEquals("Test Task", $result['name']);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->pdo->exec("DROP TABLE IF EXISTS tasks");
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::$pdo->exec("DROP DATABASE IF EXISTS " . self::$dbName);
     }
 }
