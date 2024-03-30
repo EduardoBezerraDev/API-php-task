@@ -1,4 +1,4 @@
-# Projeto: Evento
+# Projeto: # Projeto: TODO list
 
 O projeto tem como objetivo criar um todo, no qual é possível cadastrar uma nova task , assim como também visualizar, editar e deletar.
 
