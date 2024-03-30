@@ -16,7 +16,7 @@ Antes de executar o projeto, certifique-se de ter os seguintes requisitos instal
 vendor/bin/phpunit src/tests/TaskAPITest.php
 Após garantir que os requisitos acima estão atendidos, siga as etapas abaixo para executar o projeto:
 
-### Requisitos
+### Testes
 ```
 Pare realizar os testes desenvolvidos utilize o comando: vendor/bin/phpunit src/tests/TaskAPITest.php
 ```
