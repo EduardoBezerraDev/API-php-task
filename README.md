@@ -17,6 +17,11 @@ vendor/bin/phpunit src/tests/TaskAPITest.php
 Após garantir que os requisitos acima estão atendidos, siga as etapas abaixo para executar o projeto:
 
 ```
+### Testes
+Pare realizar os testes desenvolvidos utilize o comando: vendor/bin/phpunit src/tests/TaskAPITest.php
+```
+
+```
 $ Clone esse repositório: git clone https://github.com/EduardoBezerraDev/tasklist-back-php
 $ Restaure o banco de dados mytasks incluído no repositório
 $ Entre na pasta (tasklist-back-php) e realize o comando "composer install"
