@@ -28,6 +28,6 @@ $ Entre na pasta (tasklist-back-php) e realize o comando "composer install"
 $ Execute o projeto com o comando "php -S localhost:8000"
 ```
 
-### Back-End
+### Front-End
 
-* O back-end para conseguir rodar esse projeto se encontra nesse repositório: https://github.com/EduardoBezerraDev/tasklist-back-php.git
+* O Front-End para conseguir rodar esse projeto se encontra nesse repositório: https://github.com/EduardoBezerraDev/todolist.git
