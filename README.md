@@ -7,7 +7,7 @@ O projeto tem como objetivo criar um todo, no qual é possível cadastrar uma no
 
 Antes de executar o projeto, certifique-se de ter os seguintes requisitos instalados em seu ambiente de desenvolvimento:
 
-* PHP 8 +: Certifique-se de ter o Node.js instalado em sua máquina. O projeto requer o Node.js para executar o ambiente de desenvolvimento e gerenciar as dependências.
+* PHP 8 +: Certifique-se ter o PHP 8+/XAMPP instalado em sua máquina.
 * MySql/XAMPP: Você precisa ter o Mysql instalado, ou o XAMPP.
 * Gerenciador de Pacotes: O projeto utiliza o composer como gerenciador de pacotes. 
 * Editor de Código: Recomendo o uso de um editor de código como Visual Studio Code ou PhpStorm.
