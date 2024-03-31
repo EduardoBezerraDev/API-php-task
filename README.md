@@ -13,7 +13,6 @@ Antes de executar o projeto, certifique-se de ter os seguintes requisitos instal
 * Editor de Código: Recomendo o uso de um editor de código como Visual Studio Code ou PhpStorm.
 
 ### Instalação
-vendor/bin/phpunit src/tests/TaskAPITest.php
 Após garantir que os requisitos acima estão atendidos, siga as etapas abaixo para executar o projeto:
 
 ### Testes
